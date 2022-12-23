@@ -5,6 +5,7 @@ namespace alchemyguy\YoutubeLaravelApi;
 use alchemyguy\YoutubeLaravelApi\Auth\AuthService;
 use Carbon\Carbon;
 use Exception;
+use Google\Service\YouTube\VideoSnippet;
 
 /**
  *  Api Service For Youtube Live Events
@@ -119,12 +120,13 @@ class LiveStreamService extends AuthService {
 			/**
 			 * update the tags and language via video resource
 			 */
+            /** @var VideoSnippet $videoSnippet */
 			$videoSnippet = $video['snippet'];
-			$videoSnippet['tags'] = $data["tag_array"];
+            $videoSnippet->setTags($data['tag_array']);
 			if (!is_null($language)) {
 				$temp = isset($this->ytLanguage[$language]) ? $this->ytLanguage[$language] : "en";
-				$videoSnippet['defaultAudioLanguage'] = $temp;
-				$videoSnippet['defaultLanguage'] = $temp;
+				$videoSnippet->setDefaultAudioLanguage($temp);
+				$videoSnippet->setDefaultLanguage($temp);
 			}
 
 			$video['snippet'] = $videoSnippet;
@@ -143,6 +145,8 @@ class LiveStreamService extends AuthService {
 			/**
 			 * object for content distribution  [stream's format,ingestion type.]
 			 */
+			$this->googleYoutubeCdnSettings->setResolution("variable");
+			$this->googleYoutubeCdnSettings->setFrameRate("variable");
 			$this->googleYoutubeCdnSettings->setFormat("720p");
 			$this->googleYoutubeCdnSettings->setIngestionType('rtmp');
 
