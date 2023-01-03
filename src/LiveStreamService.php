@@ -197,7 +197,7 @@ class LiveStreamService extends AuthService {
 	 * @param  [type] $videoId [eventId]
 	 * @return [type]          [thumbnail url]
 	 */
-	public function uploadThumbnail($url = '', $videoId) {
+	public function uploadThumbnail($url = '', $videoId = '') {
 		if ($this->client->getAccessToken()) {
 			try {
 				/**
